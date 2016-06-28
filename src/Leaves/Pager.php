@@ -68,21 +68,25 @@ class Pager extends Leaf
     public function setCollection(Collection $collection)
     {
         $this->collection = $collection;
+
+        $this->setPageNumber($this->model->pageNumber);
     }
 
     public function setPageNumber($pageNumber)
     {
-        $numberOfPages = $this->calculateNumberOfPages();
-
-        if ($pageNumber > max($numberOfPages, 1)) {
-            throw new PagerOutOfBoundsException();
-        }
-
-        $this->model->numberOfPages = $numberOfPages;
-        $this->collectionRangeModified = true;
         $this->model->pageNumber = $pageNumber;
 
-        $this->collection->setRange((($pageNumber - 1) * $this->model->perPage), $this->model->perPage);
+        if ($this->collection) {
+            $numberOfPages = $this->calculateNumberOfPages();
+
+            if ($pageNumber > max($numberOfPages, 1)) {
+                throw new PagerOutOfBoundsException();
+            }
+
+            $this->model->numberOfPages = $numberOfPages;
+            $this->collectionRangeModified = true;
+            $this->collection->setRange((($pageNumber - 1) * $this->model->perPage), $this->model->perPage);
+        }
     }
 
     protected function parseRequest(WebRequest $request)
@@ -91,8 +95,14 @@ class Pager extends Leaf
 
         $key = $this->model->leafPath. "-page";
 
-        if ($request->request($key)) {
-            $this->pageChangedEvent->raise($request->request($key));
+        if ($request->post($key)) {
+            $this->setPageNumber($request->post($key));
+            $this->pageChangedEvent->raise($request->post($key));
+        }
+
+        if ($request->get($key)) {
+            $this->setPageNumber($request->get($key));
+            $this->pageChangedEvent->raise($request->get($key));
         }
     }
 

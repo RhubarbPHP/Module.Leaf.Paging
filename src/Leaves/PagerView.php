@@ -19,6 +19,7 @@
 namespace Rhubarb\Leaf\Paging\Leaves;
 
 use Rhubarb\Crown\Request\Request;
+use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Views\View;
 
 class PagerView extends View
@@ -42,6 +43,10 @@ class PagerView extends View
 
         $pages = [];
         $stub = $this->model->leafPath;
+
+        /**
+         * @var WebRequest $request
+         */
         $request = Request::current();
 
         $iteration = 0;
@@ -72,7 +77,7 @@ class PagerView extends View
 
             $class = ' class="' . trim($class) . '"';
 
-            $pages[] = '<a href="' . $request->Uri . '?' . $stub . '-page=' . $pageNumber . '"' . $class . ' data-page="' . $pageNumber . '">' . $pageNumber . '</a>';
+            $pages[] = '<a href="' . $request->urlPath . '?' . $stub . '-page=' . $pageNumber . '"' . $class . ' data-page="' . $pageNumber . '">' . $pageNumber . '</a>';
 
             $class = '';
 
