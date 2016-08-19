@@ -34,6 +34,16 @@ class PagerView extends View
      */
     public $bufferPages = 3;
 
+    /**
+     * CSS Classes for pager HTML elements
+     */
+    public $firstPageCssClass = 'first';
+    public $selectedPageCssClass = 'selected';
+    public $pageCssClass = 'pager-item';
+    public $pagerBufferCssClass = 'pager-buffer';
+    public $containerCssClass = 'pager';
+    public $innerContainerCssClass = 'pages';
+
     public function printViewContent()
     {
         // Don't show any pages if there only is one page.
@@ -50,40 +60,40 @@ class PagerView extends View
         $request = Request::current();
 
         $iteration = 0;
-        $class = 'first';
+        $classes = [$this->firstPageCssClass];
         while ($iteration < $this->model->numberOfPages) {
             $pageNumber = $iteration + 1;
 
             if ($pageNumber > $this->bufferPages && $pageNumber < $this->model->pageNumber - $this->bufferPages) {
                 // If we're past the first few pages but are still a few pages before our selected page
                 // and there is more than 1 page number to hide, show an ellipsis instead and skip forward
-                $pages[] = '<span class="pager-buffer">&hellip;</span>';
+                $pages[] = '<span class="' . $this->pagerBufferCssClass . '">&hellip;</span>';
                 $iteration = $this->model->pageNumber - $this->bufferPages;
                 continue;
             }
             if ($pageNumber < $this->model->numberOfPages - $this->bufferPages && $pageNumber > $this->model->pageNumber + $this->bufferPages - 1) {
                 // If we're earlier than the last few pages but are a few pages after our selected page
                 // and there is more than 1 page number to hide, show an ellipsis instead and skip forward
-                $pages[] = '<span class="pager-buffer">&hellip;</span>';
+                $pages[] = '<span class="' . $this->pagerBufferCssClass . '">&hellip;</span>';
                 $iteration = $this->model->numberOfPages - $this->bufferPages;
                 continue;
             }
 
             if ($pageNumber == $this->model->pageNumber) {
-                $class .= ' selected';
+                $classes[] = $this->selectedPageCssClass;
             }
 
-            $class .= ' pager-item';
+            $classes[] = $this->pageCssClass;
 
-            $class = ' class="' . trim($class) . '"';
+            $classAttr = ' class="' . implode(' ', $classes) . '"';
 
-            $pages[] = '<a href="' . $request->urlPath . '?' . $stub . '-page=' . $pageNumber . '"' . $class . ' data-page="' . $pageNumber . '">' . $pageNumber . '</a>';
+            $pages[] = '<a href="' . $request->urlPath . '?' . $stub . '-page=' . $pageNumber . '"' . $classAttr . ' data-page="' . $pageNumber . '">' . $pageNumber . '</a>';
 
-            $class = '';
+            $classes = [];
 
             $iteration++;
         }
 
-        print "<div class=\"pager\"><div class=\"pages\">" . implode("", $pages) . "</div></div>";
+        print '<div class="' . $this->containerCssClass . '"><div class="' . $this->innerContainerCssClass . '">' . implode('', $pages) . '</div></div>';
     }
 }
