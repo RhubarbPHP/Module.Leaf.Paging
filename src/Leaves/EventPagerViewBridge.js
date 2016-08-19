@@ -14,13 +14,12 @@ eventPager.prototype.attachEvents = function () {
         var aTag = aTags[i];
         aTag.addEventListener('click',function(event) {
             var page = event.target.getAttribute('data-page');
-            self.viewNode.querySelector(".page-input").value = page;
 
             // If our presenters are configured for it we also notify the
             // server side with an event.
 
             self.raiseServerEvent("pageChanged", page);
-
+            event.preventDefault();
             return false;
         });
     }
