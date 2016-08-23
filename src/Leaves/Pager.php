@@ -61,6 +61,7 @@ class Pager extends Leaf
 
         $this->model->pageChangedEvent->attachHandler(function ($pageNumber) {
             $this->setPageNumber($pageNumber);
+            $this->pageChangedEvent->raise($pageNumber);
         });
     }
 

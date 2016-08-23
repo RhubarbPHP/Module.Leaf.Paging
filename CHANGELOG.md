@@ -2,7 +2,12 @@
 
 ### 1.0.x
 
+### 1.0.3
+
+Fixed:  Issue where the PageChanged Event was not being raised
+
 ### 1.0.2
+
 Fixed:  Issue with Pager not using Ajax to rerender the view
 
 ### 1.0.1
