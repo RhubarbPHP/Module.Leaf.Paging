@@ -22,13 +22,14 @@ use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Request\WebRequest;
 use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
+use Rhubarb\Leaf\Leaves\UrlStateLeaf;
 use Rhubarb\Leaf\Paging\Exceptions\PagerOutOfBoundsException;
 use Rhubarb\Stem\Collections\Collection;
 
 /**
  * @property Collection $Collection The collection to page
  */
-class Pager extends Leaf
+class Pager extends UrlStateLeaf
 {
     private $collection;
 
@@ -151,5 +152,15 @@ class Pager extends Leaf
     protected function createModel()
     {
         return new PagerModel();
+    }
+
+    protected function parseUrlState(WebRequest $request)
+    {
+        if ($this->getUrlStateName()) {
+            $pageNumber = (int)$request->get($this->getUrlStateName());
+            if ($pageNumber > 1) {
+                $this->setPageNumber($pageNumber);
+            }
+        }
     }
 }
