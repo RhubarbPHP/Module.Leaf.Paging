@@ -20,7 +20,6 @@ namespace Rhubarb\Leaf\Paging\Leaves;
 
 use Rhubarb\Crown\Events\Event;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Leaf\Leaves\Leaf;
 use Rhubarb\Leaf\Leaves\LeafModel;
 use Rhubarb\Leaf\Leaves\UrlStateLeaf;
 use Rhubarb\Leaf\Paging\Exceptions\PagerOutOfBoundsException;
@@ -71,7 +70,12 @@ class Pager extends UrlStateLeaf
     {
         $this->collection = $collection;
 
-        $this->setPageNumber($this->model->pageNumber);
+        try {
+            $this->setPageNumber($this->model->pageNumber);
+        } catch (PagerOutOfBoundsException $ex) {
+            // If the current page is beyond the new collection, go back to the first page
+            $this->setPageNumber(1);
+        }
     }
 
     public function setPageNumber($pageNumber)
@@ -159,7 +163,12 @@ class Pager extends UrlStateLeaf
         if ($this->getUrlStateName()) {
             $pageNumber = (int)$request->get($this->getUrlStateName());
             if ($pageNumber > 1) {
-                $this->setPageNumber($pageNumber);
+                try {
+                    $this->setPageNumber($pageNumber);
+                } catch (PagerOutOfBoundsException $ex) {
+                    // Ignore if the URL specifies a page too far on for this collection
+                    $this->setPageNumber(1);
+                }
             }
         }
     }

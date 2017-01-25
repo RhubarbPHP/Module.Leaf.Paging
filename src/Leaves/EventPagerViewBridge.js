@@ -1,8 +1,8 @@
 var eventPager = function (presenterPath) {
-    window.rhubarb.viewBridgeClasses.ViewBridge.apply(this, arguments);
+    window.rhubarb.viewBridgeClasses.UrlStateViewBridge.apply(this, arguments);
 };
 
-eventPager.prototype = new window.rhubarb.viewBridgeClasses.ViewBridge();
+eventPager.prototype = new window.rhubarb.viewBridgeClasses.UrlStateViewBridge();
 eventPager.prototype.constructor = eventPager;
 
 eventPager.prototype.attachEvents = function () {
@@ -18,6 +18,7 @@ eventPager.prototype.attachEvents = function () {
             // If our presenters are configured for it we also notify the
             // server side with an event.
 
+            self.setUrlStateParam(page);
             self.raiseServerEvent("pageChanged", page);
             event.preventDefault();
             return false;
