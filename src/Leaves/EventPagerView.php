@@ -20,17 +20,17 @@ namespace Rhubarb\Leaf\Paging\Leaves;
 
 require_once __DIR__ . '/PagerView.php';
 
-use Rhubarb\Leaf\Leaves\LeafDeploymentPackage;
-
 class EventPagerView extends PagerView
 {
     protected function getViewBridgeName()
     {
-        return "EventPagerViewBridge";
+        return 'EventPagerViewBridge';
     }
 
     public function getDeploymentPackage()
     {
-        return new LeafDeploymentPackage(__DIR__.'/EventPagerViewBridge.js');
+        $package = parent::getDeploymentPackage();
+        $package->resourcesToDeploy[] = __DIR__ . '/EventPagerViewBridge.js';
+        return $package;
     }
 }

@@ -20,9 +20,9 @@ namespace Rhubarb\Leaf\Paging\Leaves;
 
 use Rhubarb\Crown\Request\Request;
 use Rhubarb\Crown\Request\WebRequest;
-use Rhubarb\Leaf\Views\View;
+use Rhubarb\Leaf\Leaves\UrlStateView;
 
-class PagerView extends View
+class PagerView extends UrlStateView
 {
     /**
      * @var PagerModel
