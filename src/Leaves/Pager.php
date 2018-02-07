@@ -69,13 +69,6 @@ class Pager extends UrlStateLeaf
     public function setCollection(Collection $collection)
     {
         $this->collection = $collection;
-
-        try {
-            $this->setPageNumber($this->model->pageNumber);
-        } catch (PagerOutOfBoundsException $ex) {
-            // If the current page is beyond the new collection, go back to the first page
-            $this->setPageNumber(1);
-        }
     }
 
     public function setPageNumber($pageNumber)
