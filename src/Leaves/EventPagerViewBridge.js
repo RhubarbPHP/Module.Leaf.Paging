@@ -15,7 +15,7 @@ eventPager.prototype.attachEvents = function () {
         aTag.addEventListener('click',function(event) {
             var page = event.target.getAttribute('data-page');
 
-            // If our presenters are configured for it we also notify the
+            // If our leaves are configured for it we also notify the
             // server side with an event.
 
             self.setUrlStateParam(page);
