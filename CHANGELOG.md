@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.1
+
+Fixed:  Performance issue where event pager was counting pages even if never shown.
+
 ### 1.1.0
 
 Added:  Storing page in URL state

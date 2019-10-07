@@ -65,6 +65,15 @@ class Pager extends UrlStateLeaf
         });
     }
 
+    protected function onModelCreated()
+    {
+        parent::onModelCreated();
+
+        $this->model->pageChangedEvent->attachHandler(function($pageNumber){
+            $this->changePageNumber($pageNumber);
+        });
+    }
+
 
     public function setCollection(Collection $collection)
     {
@@ -83,6 +92,14 @@ class Pager extends UrlStateLeaf
         $this->model->pageNumber = $pageNumber;
 
         if ($this->collection) {
+            $this->collectionRangeModified = true;
+            $this->collection->setRange((($pageNumber - 1) * $this->model->perPage), $this->model->perPage);
+        }
+    }
+
+    protected function changePageNumber($pageNumber)
+    {
+        if ($this->collection) {
             $numberOfPages = $this->calculateNumberOfPages();
 
             if ($pageNumber > max($numberOfPages, 1)) {
@@ -90,9 +107,9 @@ class Pager extends UrlStateLeaf
             }
 
             $this->model->numberOfPages = $numberOfPages;
-            $this->collectionRangeModified = true;
-            $this->collection->setRange((($pageNumber - 1) * $this->model->perPage), $this->model->perPage);
         }
+
+        $this->setPageNumber($pageNumber);
     }
 
     protected function parseRequest(WebRequest $request)
@@ -102,12 +119,10 @@ class Pager extends UrlStateLeaf
         $key = $this->model->leafPath. "-page";
 
         if ($request->post($key)) {
-            $this->setPageNumber($request->post($key));
             $this->pageChangedEvent->raise($request->post($key));
         }
 
         if ($request->get($key)) {
-            $this->setPageNumber($request->get($key));
             $this->pageChangedEvent->raise($request->get($key));
         }
     }
@@ -120,6 +135,10 @@ class Pager extends UrlStateLeaf
     protected function beforeRender()
     {
         $this->setPageNumber($this->model->pageNumber);
+
+        if ($this->model->numberOfPages === null){
+            $this->model->numberOfPages = $this->calculateNumberOfPages();
+        }
 
         parent::beforeRender();
     }
