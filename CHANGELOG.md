@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.3
+
+Fixed:  1.1.2 broke paging...
+
 ### 1.1.2
 
 Fixed:  Fixed issue with pager not updating properly if other events updated the collection
