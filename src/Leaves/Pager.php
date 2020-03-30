@@ -78,7 +78,8 @@ class Pager extends UrlStateLeaf
     public function setCollection(Collection $collection)
     {
         $this->collection = $collection;
-
+        // Reset the number of pages so when rendered it gets recalculated
+        $this->model->numberOfPages = null;
         try {
             $this->setPageNumber($this->model->pageNumber);
         } catch (PagerOutOfBoundsException $ex) {
