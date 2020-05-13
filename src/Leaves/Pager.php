@@ -59,9 +59,8 @@ class Pager extends UrlStateLeaf
 
         $this->model->perPage = $perPage;
 
-        $this->model->pageChangedEvent->attachHandler(function ($pageNumber) {
+        $this->pageChangedEvent->attachHandler(function ($pageNumber) {
             $this->setPageNumber($pageNumber);
-            $this->pageChangedEvent->raise($pageNumber);
         });
     }
 
@@ -150,8 +149,6 @@ class Pager extends UrlStateLeaf
      */
     private function calculateNumberOfPages()
     {
-        $this->collection->setRange(0, $this->model->perPage);
-
         $collectionSize = sizeof($this->collection);
         $pages = ceil($collectionSize / $this->model->perPage);
 
