@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.1.4
+
+Fixed:  Issue with pager resetting range to 0 on before render
+
 ### 1.1.3
 
 Fixed:  1.1.2 broke paging...
