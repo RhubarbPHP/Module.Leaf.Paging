@@ -62,6 +62,10 @@ class Pager extends UrlStateLeaf
         $this->pageChangedEvent->attachHandler(function ($pageNumber) {
             $this->setPageNumber($pageNumber);
         });
+
+        $this->model->pageChangedEvent->attachHandler(function ($pageNumber) {
+            $this->pageChangedEvent->raise($pageNumber);
+        });
     }
 
     protected function onModelCreated()
