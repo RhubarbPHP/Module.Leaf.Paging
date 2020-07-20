@@ -73,7 +73,7 @@ class Pager extends UrlStateLeaf
         parent::onModelCreated();
 
         $this->model->pageChangedEvent->attachHandler(function($pageNumber){
-            $this->changePageNumber($pageNumber);
+            $this->setPageNumber($pageNumber);
         });
     }
 
@@ -81,14 +81,7 @@ class Pager extends UrlStateLeaf
     public function setCollection(Collection $collection)
     {
         $this->collection = $collection;
-        // Recalculate the number of pages.
-        $this->model->numberOfPages = $this->calculateNumberOfPages();
-        try {
-            $this->setPageNumber($this->model->pageNumber);
-        } catch (PagerOutOfBoundsException $ex) {
-            // If the current page is beyond the new collection, go back to the first page
-            $this->setPageNumber(1);
-        }
+        $this->setPageNumber($this->model->pageNumber);
     }
 
     public function setPageNumber($pageNumber)
@@ -144,9 +137,14 @@ class Pager extends UrlStateLeaf
             $this->model->numberOfPages = $this->calculateNumberOfPages();
         }
 
+        // If we will be unable to present the page as it's outside our bounds, we 
+        // go back to page 1.
+        if ($this->model->pageNumber > $this->model->numberOfPages){
+            $this->setPageNumber(1);
+        }
+
         parent::beforeRender();
     }
-
 
     /**
      * @return float
