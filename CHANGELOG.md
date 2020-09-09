@@ -1,5 +1,11 @@
 # Changelog
 
+### 1.2.0
+
+Change: Pager no longer tries to calculate the page count in setCollection(). This was firing many
+        times and often before any filters had been attached causing extreme performance degredation
+        in some cases.
+
 ### 1.1.4
 
 Fixed:  Issue with pager resetting range to 0 on before render
